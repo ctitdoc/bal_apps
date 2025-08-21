@@ -21,20 +21,6 @@ ballerina.log.level = "DEBUG"
 # in dev and preprod the url should be equal the one of a running /modules/mock service and the secret : "unused:unused"
 boApiUrl = "REPLACEME"
 boApiSecret = "REPLACEME"
-
-[job_patch.conf]
-port = REPLACEME
-
-[teams]
-webhookUrl = "REPLACEME"
-channelId = "REPLACEME"
-apiKey = "REPLACEME"
-
-[fo_db.credentials]
-host = "REPLACEME"
-user = "REPLACEME"
-password = "REPLACEME"
-database = "REPLACEME"
 ```
 
 * ajouter dans le fichier ~/.profile du compte bal_apps (= fichier exécuté à chaque ouverture de session du compte linux qui exécute une app ou un module bal_apps):
@@ -48,7 +34,7 @@ fi
 ```
 source ~/.profile
 ```
-* exécuter la procédure de déploiement du composant intègré [fo_db](../../modules/fo_db/README.md),
+* exécuter les procédures de déploiement des README des composant intègrés (ces composant sont  indiqués dans les section dependency du fichier Ballerina.toml),
 
 * lancer "bal build" à la racine de ce module pour vérifier que le projet compile bien,
 * pour lancer le job: bal run

@@ -13,7 +13,7 @@ dryRunNotify = false
 [zero_km.websocket]
 port = 21003
 
-[conf]
+[check_disk_space.conf]
 server = "ELITEAUTO BO"
 hour = 16
 minutes = 0

@@ -70,7 +70,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.14.3"
+version = "2.14.4"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -407,11 +407,9 @@ org = "cosmobilis"
 name = "fo_db"
 version = "0.1.0"
 dependencies = [
-	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "log"},
-	{org = "ballerina", name = "os"},
 	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "mysql"}
+	{org = "cosmobilis", name = "mysql5_bindings"}
 ]
 
 [[package]]
@@ -435,6 +433,17 @@ dependencies = [
 ]
 modules = [
 	{org = "cosmobilis", packageName = "job_patch", moduleName = "job_patch"}
+]
+
+[[package]]
+org = "cosmobilis"
+name = "mysql5_bindings"
+version = "0.1.0"
+dependencies = [
+	{org = "ballerina", name = "jballerina.java"},
+	{org = "ballerina", name = "lang.value"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerinai", name = "observe"}
 ]
 
 [[package]]

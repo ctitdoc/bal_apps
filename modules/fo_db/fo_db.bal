@@ -1,16 +1,8 @@
 import ballerina/log;
-import ballerina/os;
-import ballerina/io;
 
-public type DbCredentials record {
-    string host;
-    int port = 3306;
-    string user;
-    string password;
-    string database;
-};
+import cosmobilis/mysql5_bindings as j_mysql5;
 
-public configurable DbCredentials credentials = ?;
+configurable j_mysql5:Conf conf = ?;
 
 public type Quotation record {
     int id;
@@ -24,7 +16,7 @@ public record {
 } SYNC_STATE = {TODO: 0, DONE: 1, ERROR: 2};
 
 isolated function getQuotationSelect(string etat) returns string {
-    return string `SELECT CONCAT('<itn_bo_message><id>',id,'</id><message><![CDATA[', message,']]></message></itn_bo_message>') FROM itn_bo_message WHERE etat = ${etat} AND created_at >= '2025-07-10' limit 1`;
+    return string `SELECT CONCAT('<itn_bo_message><id>',id,'</id><message><![CDATA[', message,']]></message></itn_bo_message>') as quotationMessage FROM itn_bo_message WHERE etat = ${etat} AND created_at >= '2025-07-10' limit 1`;
 }
 
 public isolated function getQuotationMsgsInError() returns xml|error {
@@ -36,53 +28,23 @@ public isolated function getQuotationMsgs() returns xml|error {
 }
 
 isolated function execQuotationSelect(string query) returns xml|error {
-
-    //mysql standard version
-    //Quotation[] quotations = [];
-    // stream<Quotation, error?> resultStream = (dbClient->query(
-    //     `SELECT id, CAST(message AS JSON) as content FROM itn_bo_message WHERE etat=0`
-    // ));
-    //     _ = check from Quotation quotation in resultStream
-    //     do {
-    //         quotations.push(quotation);
-    //     };
-    // _ = check resultStream.close();
-
-    //mysql 5.1 version using fosql mariadb client alias with credentials and 
-    //sp_get_quotations stored procedure returning results in json
-    os:Process process = check os:exec({
-                                           value: "exec_sql.sh",
-                                           arguments: [credentials.user, credentials.password, credentials.host, 
-                                                       credentials.database, query]
-                                       });
-    
-
-    log:printDebug("before waitForExit");
-    int status = check process.waitForExit();
-    log:printDebug("after waitForExit");
-    string stderr = check string:fromBytes(check process.output(io:stderr));
-    string stdout = check string:fromBytes(check process.output());
-    log:printDebug(stderr);
-    string content = check io:fileReadString(stdout);
+    json result = check j_mysql5:query(check j_mysql5:connect(conf), query);
+    map<string>[] typedResult = check result.cloneWithType();
+    string content = (typedResult.length() == 0) ? "" : check (typedResult[0]["quotationMessage"]).cloneWithType();
     string xmlDocStr = "<itn_bo_messages>" + content + "</itn_bo_messages>";
     string:RegExp r = re `\\\\u`;
-    xmlDocStr = r.replaceAll(xmlDocStr,"\\u");
+    xmlDocStr = r.replaceAll(xmlDocStr, "\\u");
     string:RegExp r1 = re `\\\\"`;
-    xmlDocStr = r1.replaceAll(xmlDocStr,"\\\"");
+    xmlDocStr = r1.replaceAll(xmlDocStr, "\\\"");
     log:printDebug(xmlDocStr);
     xml quotationMsgs = check xml:fromString(xmlDocStr);
     return quotationMsgs;
 }
 
 public isolated function setQuotationMsgState(string quotationMsgId, int state, string response) returns error? {
-        string query = string `UPDATE itn_bo_message SET etat = ${state}, response = '${escapeForSql(response)}' WHERE id = ${quotationMsgId}`;
-        log:printDebug(query);
-        os:Process process = check os:exec({
-                                           value: "exec_sql.sh",
-                                           arguments: [credentials.user, credentials.password, credentials.host, 
-                                                       credentials.database, query]
-                                       });
-    _ = check process.waitForExit();
+    string query = string `UPDATE itn_bo_message SET etat = ${state}, response = '${escapeForSql(response)}' WHERE id = ${quotationMsgId}`;
+    log:printDebug(query);
+    int rows = check j_mysql5:update(check j_mysql5:connect(conf), query);
 }
 
 isolated function escapeForSql(string input) returns string {

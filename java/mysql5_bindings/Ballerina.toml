@@ -1,0 +1,29 @@
+[package]
+org = "cosmobilis"
+name = "mysql5_bindings"
+version = "0.1.0"
+distribution = "2201.9.0"
+
+[build-options]
+observabilityIncluded = true
+
+[[platform.java21.dependency]]
+groupId = "cosmobilis.mysql5"
+artifactId = "mysql5-wrapper-java"
+version = "0.1.0"
+path = "./lib/mysql5_wrapper_java.jar"
+graalvmCompatible = true
+
+[[platform.java21.dependency]]
+groupId = "mysql"
+artifactId = "mysql-connector-java"
+version = "5.1.49"
+path = "./lib/mysql-connector-java-5.1.49.jar"
+graalvmCompatible = true
+
+[[platform.java21.dependency]]
+groupId = "org.json"
+artifactId = "json"
+version = "20240303"
+path = "./lib/json-20240303.jar"
+graalvmCompatible = true
