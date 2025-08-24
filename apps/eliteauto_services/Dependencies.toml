@@ -70,7 +70,7 @@ dependencies = [
 [[package]]
 org = "ballerina"
 name = "http"
-version = "2.14.3"
+version = "2.14.4"
 dependencies = [
 	{org = "ballerina", name = "auth"},
 	{org = "ballerina", name = "cache"},
@@ -388,12 +388,30 @@ modules = [
 
 [[package]]
 org = "cosmobilis"
+name = "check_funding_offers"
+version = "0.1.0"
+dependencies = [
+	{org = "ballerina", name = "data.jsondata"},
+	{org = "ballerina", name = "log"},
+	{org = "ballerina", name = "task"},
+	{org = "ballerinai", name = "observe"},
+	{org = "cosmobilis", name = "bo_db"},
+	{org = "cosmobilis", name = "job_patch"},
+	{org = "cosmobilis", name = "teams"}
+]
+modules = [
+	{org = "cosmobilis", packageName = "check_funding_offers", moduleName = "check_funding_offers"}
+]
+
+[[package]]
+org = "cosmobilis"
 name = "eliteauto_services"
 version = "0.1.0"
 dependencies = [
 	{org = "ballerina", name = "task"},
 	{org = "ballerinai", name = "observe"},
 	{org = "cosmobilis", name = "check_disk_space"},
+	{org = "cosmobilis", name = "check_funding_offers"},
 	{org = "cosmobilis", name = "job_patch"},
 	{org = "cosmobilis", name = "sync_fo_quotations"},
 	{org = "cosmobilis", name = "update_customer_dispo"}
@@ -410,8 +428,7 @@ dependencies = [
 	{org = "ballerina", name = "io"},
 	{org = "ballerina", name = "log"},
 	{org = "ballerina", name = "os"},
-	{org = "ballerinai", name = "observe"},
-	{org = "ballerinax", name = "mysql"}
+	{org = "ballerinai", name = "observe"}
 ]
 
 [[package]]

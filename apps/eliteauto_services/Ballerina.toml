@@ -63,6 +63,12 @@ repository = "local"
 
 [[dependency]]
 org = "cosmobilis"
+name = "check_funding_offers"
+version = "0.1.0"
+repository = "local"
+
+[[dependency]]
+org = "cosmobilis"
 name = "teams"
 version = "0.1.0"
 repository = "local"
